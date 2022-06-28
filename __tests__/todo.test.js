@@ -26,9 +26,9 @@ describe('todo routes', () => {
     pool.end();
   });
 
-  it('Post to /api/v1/todos should create a new todo', async () => {
+  it('Post to /api/v1/todo should create a new todo', async () => {
     const [agent, user] = await registerAndLogin();
-    const resp = await agent.post('/api/v1/items').send({
+    const resp = await agent.post('/api/v1/todo').send({
       todo: 'clean',
       done: false,
     });
