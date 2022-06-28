@@ -29,7 +29,6 @@ describe('todo routes', () => {
     const [agent, user] = await registerAndLogin();
     const resp = await agent.post('/api/v1/todo').send({
       todo: 'clean',
-      done: false,
     });
     expect(resp.status).toBe(200);
     expect(resp.body).toEqual({
@@ -43,7 +42,6 @@ describe('todo routes', () => {
     const [agent, user] = await registerAndLogin();
     await agent.post('/api/v1/todo').send({
       todo: 'clean',
-      done: false,
     });
     const resp = await agent.get('/api/v1/todo');
     expect(resp.body).toEqual([

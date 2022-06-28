@@ -12,7 +12,7 @@ CREATE TABLE todo_users (
 CREATE TABLE todo (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
     todo VARCHAR NOT NULL, 
-    done BOOLEAN NOT NULL, 
+    done BOOLEAN NOT NULL DEFAULT(false), 
     user_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES todo_users(id)
 );
