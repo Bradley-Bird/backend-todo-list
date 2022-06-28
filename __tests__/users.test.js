@@ -17,7 +17,6 @@ const registerAndLogin = async (userProps = {}) => {
 
   // Create a user to sign in with
   const user = await UserService.create({ ...mockUser, ...userProps });
-  console.log('user123', user);
 
   // ...then sign in
   const { email } = user;
@@ -44,14 +43,16 @@ describe('users routes', () => {
   });
   it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
-    console.log('user', user);
-    console.log('agent', agent);
     const me = await agent.get('/api/v1/users/me');
-    console.log('me', me);
     expect(me.body).toEqual({
       ...user,
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
+  });
+  it('signs out the user on delete session cookie', async () => {
+    const [agent] = await registerAndLogin();
+    const resp = await agent.delete('/api/v1/users/sessions');
+    expect(resp.status).toBe(204);
   });
 });
