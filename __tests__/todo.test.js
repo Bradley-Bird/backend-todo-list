@@ -3,6 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
+const Todo = require('../lib/models/Todo');
 const mockUser = {
   email: '14@14.com',
   password: '123123',
@@ -52,5 +53,16 @@ describe('todo routes', () => {
         done: false,
       },
     ]);
+  });
+  it('Put, /api/v1/todo/:id should update an item', async () => {
+    const [agent] = await registerAndLogin();
+    const todo = await agent.post('/api/v1/todo').send({
+      todo: 'clean',
+    });
+    const resp = await agent
+      .put(`/api/v1/todo/${todo.body.id}`)
+      .send({ done: true });
+    expect(resp.status).toBe(200);
+    expect(resp.body).toEqual({ ...todo.body, done: true });
   });
 });
