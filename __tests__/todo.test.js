@@ -84,4 +84,12 @@ describe('todo routes', () => {
       .send({ bought: true });
     expect(resp.status).toBe(403);
   });
+  it('deletes todo item if user_id matches id', async () => {
+    const [agent] = await registerAndLogin();
+    const todo = await agent.post('/api/v1/todo').send({
+      todo: 'clean',
+    });
+    const resp = await agent.delete(`/api/v1/todo/${todo.body.id}`);
+    expect(resp.status).toBe(200);
+  });
 });
