@@ -92,4 +92,16 @@ describe('todo routes', () => {
     const resp = await agent.delete(`/api/v1/todo/${todo.body.id}`);
     expect(resp.status).toBe(200);
   });
+  it('Delete /api/v1/items/:id should 403 for invalid users', async () => {
+    // create a user
+    const [agent] = await registerAndLogin();
+    // create a second user
+    const user2 = await UserService.create(mockUser2);
+    const item = await Todo.insert({
+      todo: 'clean',
+      user_id: user2.id,
+    });
+    const resp = await agent.delete(`/api/v1/todo/${item.id}`);
+    expect(resp.status).toBe(403);
+  });
 });
