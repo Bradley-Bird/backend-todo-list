@@ -4,8 +4,13 @@ const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 const Todo = require('../lib/models/Todo');
+
 const mockUser = {
   email: '14@14.com',
+  password: '123123',
+};
+const mockUser2 = {
+  email: '15@15.com',
   password: '123123',
 };
 
@@ -64,5 +69,19 @@ describe('todo routes', () => {
       .send({ done: true });
     expect(resp.status).toBe(200);
     expect(resp.body).toEqual({ ...todo.body, done: true });
+  });
+  it('PUT /api/v1/items/:id should 403 for invalid users', async () => {
+    // create a user
+    const [agent] = await registerAndLogin();
+    // create a second user
+    const user2 = await UserService.create(mockUser2);
+    const item = await Todo.insert({
+      todo: 'clean',
+      user_id: user2.id,
+    });
+    const resp = await agent
+      .put(`/api/v1/todo/${item.id}`)
+      .send({ bought: true });
+    expect(resp.status).toBe(403);
   });
 });
